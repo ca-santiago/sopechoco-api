@@ -9,8 +9,11 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
   Res,
 } from '@nestjs/common';
+import { GuisoService } from '../service/guiso.service';
+import { CreateGuisoDTO } from '../service/guiso.dto';
 
 @Controller('catalog')
 export class CatalogController {
@@ -41,5 +44,32 @@ export class CatalogController {
     const serviceResult = await this.baseProductService.findById(id);
     if (!serviceResult) return res.status(HttpStatus.NOT_FOUND).end();
     return res.json(serviceResult).end();
+  }
+}
+
+@Controller('guisos')
+export class GuisoController {
+  constructor(private guisoService: GuisoService) {}
+
+  @Post()
+  async createGuiso(@Body() dto: CreateGuisoDTO, @Res() res: Response) {
+    try {
+      await this.guisoService.create(dto);
+      return res.status(HttpStatus.OK).end();
+    } catch (err) {
+      console.error(err);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
+    }
+  }
+
+  @Get()
+  async getAll(@Query() query, @Res() res: Response) {
+    try {
+      const serviceRes = await this.guisoService.getAll(query['page']);
+      return res.status(HttpStatus.OK).json({ results: serviceRes }).end();
+    } catch (err) {
+      console.error(err);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
+    }
   }
 }
