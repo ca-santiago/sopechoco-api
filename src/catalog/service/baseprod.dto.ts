@@ -3,7 +3,11 @@ import {
   IsBoolean,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
+  IsUUID,
+  Length,
+  Min,
 } from 'class-validator';
 
 export class CreateProductDefinitionDTO {
@@ -11,10 +15,12 @@ export class CreateProductDefinitionDTO {
   @IsNotEmpty()
   title: string;
 
+  @IsOptional()
+  @IsString()
   description?: string;
 
   @IsArray()
-  @IsString({ each: true })
+  @IsUUID(4, { each: true })
   guisos: string[];
 
   @IsBoolean()
@@ -26,6 +32,7 @@ export class CreateProductDefinitionDTO {
 
   @IsNumber()
   @IsNotEmpty()
+  @Min(0)
   minGuisos: number;
 
   @IsNumber()

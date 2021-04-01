@@ -6,7 +6,7 @@ import { GuisoDocument } from '../schema/guiso.schema';
 
 @Injectable()
 export class GuisoRepo {
-  constructor(@InjectModel('Guiso') private guisoModel: Model<GuisoDocument>) {}
+  constructor(@InjectModel('Guiso') private guisoModel: Model<GuisoDocument>) { }
   async save(g: IGuiso): Promise<void> {
     const upsetData = { ...g };
     await this.guisoModel
@@ -27,5 +27,14 @@ export class GuisoRepo {
       .limit(10)
       .sort('createdAt')
       .exec();
+  }
+
+  async exist(_id: string): Promise<boolean> {
+    return await this.guisoModel.exists({ _id });
+  }
+
+  async existBulk(ids: string[]): Promise<boolean[]> {
+    const existResultMapped = ids.map((i) => this.exist(i));
+    return await Promise.all(existResultMapped);
   }
 }

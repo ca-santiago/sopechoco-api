@@ -21,8 +21,12 @@ export class CatalogController {
 
   @Post()
   async createProduct(@Body() dto: CreateProductDefinitionDTO) {
-    await this.baseProductService.create(dto);
-    return;
+    try {
+      await this.baseProductService.create(dto);
+      return;
+    } catch (err) {
+      throw err;
+    }
   }
 
   @Get()
