@@ -2,12 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IBaseProduct } from '../interfaces/baseprod';
+import { IProductPublicDTO } from '../interfaces/product.dto';
+import { ProductMapper } from '../mapper/product.mapper';
 import { BaseProdDocument } from '../schema/baseprod.schema';
 
 @Injectable()
 export class BaseProdRepo {
   constructor(
     @InjectModel('BaseProduct') private prodModel: Model<BaseProdDocument>,
+    private prodMapper: ProductMapper,
   ) {}
 
   async save(bp: IBaseProduct): Promise<void> {
@@ -15,7 +18,7 @@ export class BaseProdRepo {
       ...bp,
     };
     await this.prodModel
-      .findByIdAndUpdate(bp.id, upsetData, { upsert: true })
+      .findByIdAndUpdate(bp._id, upsetData, { upsert: true })
       .exec();
   }
 
@@ -25,7 +28,9 @@ export class BaseProdRepo {
   }
 
   async findById(id: string): Promise<IBaseProduct | null> {
-    return await this.prodModel.findById(id).exec();
+    const exist = await this.prodModel.findById(id).exec();
+    if (exist) return this.prodMapper.toDomain(exist);
+    return null;
   }
 
   async exist(_id: string): Promise<boolean> {
@@ -33,6 +38,20 @@ export class BaseProdRepo {
   }
 
   async getAll(): Promise<any> {
-    return this.prodModel.find().exec();
+    const results = await this.prodModel.find().exec();
+    return results.map((item) => this.prodMapper.toDomain(item));
+  }
+
+  // Query version
+
+  async getAllToDTO(): Promise<IProductPublicDTO[]> {
+    const results = await this.prodModel.find().exec();
+    return results.map((item) => this.prodMapper.toDTO(item));
+  }
+
+  async findByIdToDTO(id: string): Promise<IProductPublicDTO | null> {
+    const exist = await this.prodModel.findById(id).exec();
+    if (exist) return this.prodMapper.toDTO(exist);
+    return null;
   }
 }

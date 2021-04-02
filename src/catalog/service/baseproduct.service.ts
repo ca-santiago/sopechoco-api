@@ -3,6 +3,7 @@ import * as moment from 'moment';
 
 import { v4 } from 'uuid';
 import { IBaseProduct } from '../interfaces/baseprod';
+import { IProductPublicDTO } from '../interfaces/product.dto';
 import { BaseProdRepo } from '../repo/BaseProduct.repo';
 import { GuisoRepo } from '../repo/guiso.repo';
 import { CreateProductDefinitionDTO } from './baseprod.dto';
@@ -26,9 +27,10 @@ export class BaseProductService {
         HttpStatus.CONFLICT,
       );
 
+    // TODO: implement the product class
     const prodInstance: IBaseProduct = {
       ...bp,
-      id: v4(),
+      _id: v4(),
       createdAt: moment().format(),
       description: bp.description || '',
     };
@@ -41,12 +43,12 @@ export class BaseProductService {
     return;
   }
 
-  async getAll(): Promise<IBaseProduct[]> {
-    return await this.prodRepo.getAll();
+  async getAll(): Promise<IProductPublicDTO[]> {
+    return await this.prodRepo.getAllToDTO();
   }
 
-  async findById(id: string): Promise<IBaseProduct> {
-    const output = await this.prodRepo.findById(id);
+  async findById(id: string): Promise<IProductPublicDTO | null> {
+    const output = await this.prodRepo.findByIdToDTO(id);
     return output;
   }
 }

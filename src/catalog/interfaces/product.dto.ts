@@ -1,5 +1,5 @@
-export interface IBaseProduct {
-  _id: string;
+export interface IProductPublicDTO {
+  id: string;
   title: string;
   description: string;
   price: number;
@@ -7,5 +7,4 @@ export interface IBaseProduct {
   maxGuisos: number;
   minGuisos: number;
   guisos: string[];
-  createdAt: string;
 }

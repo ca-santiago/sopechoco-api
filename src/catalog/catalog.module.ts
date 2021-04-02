@@ -4,6 +4,7 @@ import {
   CatalogController,
   GuisoController,
 } from './controllers/catalog.controller';
+import { ProductMapper } from './mapper/product.mapper';
 import { BaseProdRepo } from './repo/BaseProduct.repo';
 import { GuisoRepo } from './repo/guiso.repo';
 import { BaseProdSchema } from './schema/baseprod.schema';
@@ -19,6 +20,12 @@ import { GuisoService } from './service/guiso.service';
     ]),
   ],
   controllers: [CatalogController, GuisoController],
-  providers: [BaseProductService, GuisoService, BaseProdRepo, GuisoRepo],
+  providers: [
+    BaseProductService,
+    GuisoService,
+    BaseProdRepo,
+    GuisoRepo,
+    ProductMapper,
+  ],
 })
 export class CatalogModule {}
