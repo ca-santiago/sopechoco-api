@@ -1,5 +1,5 @@
 export interface IGuiso {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   available: boolean;

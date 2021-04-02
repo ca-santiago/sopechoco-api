@@ -22,11 +22,11 @@ export class GuisoService {
   }
 
   async getById(id: string) {
-    return this.guisoRepo.findById(id);
+    return this.guisoRepo.findByIdToDTO(id);
   }
 
   async getAll(page = 0) {
     const _page = isNaN(Math.abs(page)) ? page : 0;
-    return this.guisoRepo.getAll(_page);
+    return this.guisoRepo.getAllToDTO(_page);
   }
 }
