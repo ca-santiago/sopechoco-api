@@ -15,7 +15,7 @@ import {
 import { GuisoService } from '../service/guiso.service';
 import { CreateGuisoDTO } from '../service/guiso.dto';
 
-@Controller('catalog')
+@Controller('products')
 export class CatalogController {
   constructor(private baseProductService: BaseProductService) {}
 

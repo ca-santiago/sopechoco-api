@@ -12,4 +12,8 @@ export class BaseProduct implements IBaseProduct {
     public readonly guisos: string[],
     public readonly createdAt: string,
   ) {}
+
+  guisoExist(g: string): boolean {
+    return this.guisos.includes(g);
+  }
 }

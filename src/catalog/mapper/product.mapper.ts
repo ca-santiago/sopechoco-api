@@ -48,4 +48,18 @@ export class ProductMapper {
     };
     return mapped;
   }
+
+  fromRepoToDTO(raw: IBaseProduct): IProductPublicDTO {
+    const mapped: IProductPublicDTO = {
+      id: raw._id,
+      title: raw.title,
+      available: raw.available,
+      description: raw.description,
+      guisos: raw.guisos,
+      maxGuisos: raw.maxGuisos,
+      minGuisos: raw.minGuisos,
+      price: raw.price,
+    };
+    return mapped;
+  }
 }

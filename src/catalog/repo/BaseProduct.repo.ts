@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { BaseProduct } from '../domain/BaseProd';
 import { IBaseProduct } from '../interfaces/baseprod';
 import { IProductPublicDTO } from '../interfaces/product.dto';
 import { ProductMapper } from '../mapper/product.mapper';
@@ -27,7 +28,7 @@ export class BaseProdRepo {
     return;
   }
 
-  async findById(id: string): Promise<IBaseProduct | null> {
+  async findById(id: string): Promise<BaseProduct | null> {
     const exist = await this.prodModel.findById(id).exec();
     if (exist) return this.prodMapper.toDomain(exist);
     return null;
@@ -46,12 +47,12 @@ export class BaseProdRepo {
 
   async getAllToDTO(): Promise<IProductPublicDTO[]> {
     const results = await this.prodModel.find().exec();
-    return results.map((item) => this.prodMapper.toDTO(item));
+    return results.map((item) => this.prodMapper.fromRepoToDTO(item));
   }
 
   async findByIdToDTO(id: string): Promise<IProductPublicDTO | null> {
     const exist = await this.prodModel.findById(id).exec();
-    if (exist) return this.prodMapper.toDTO(exist);
+    if (exist) return this.prodMapper.fromRepoToDTO(exist);
     return null;
   }
 }
