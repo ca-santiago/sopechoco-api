@@ -11,9 +11,11 @@ import {
   Post,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { GuisoService } from '../service/guiso.service';
 import { CreateGuisoDTO } from '../service/guiso.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('products')
 export class CatalogController {
@@ -29,6 +31,7 @@ export class CatalogController {
     }
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   async getAll() {
     const out = await this.baseProductService.getAll();

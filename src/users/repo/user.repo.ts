@@ -17,9 +17,9 @@ export class UserMongoRepo {
     return await this.userModel.exists({ _id });
   }
 
-  async findByEmail(e: string): Promise<IUserPublicDTO | null> {
+  async findByEmail(e: string): Promise<User | null> {
     const exist = await this.userModel.findOne({ email: e });
-    if (exist) return this.userMapper.fromRepoToPublicDTO(exist);
+    if (exist) return this.userMapper.toDomain(exist);
     return null;
   }
 
@@ -49,5 +49,11 @@ export class UserMongoRepo {
       this.userMapper.fromRepoToPublicDTO(item),
     );
     return mapped;
+  }
+
+  async findByEmailToDTO(e: string): Promise<IUserPublicDTO | null> {
+    const exist = await this.userModel.findOne({ email: e });
+    if (exist) return this.userMapper.fromRepoToPublicDTO(exist);
+    return null;
   }
 }

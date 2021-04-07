@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { UserModule } from 'src/users/user.module';
 import {
   CatalogController,
   GuisoController,
@@ -19,6 +20,7 @@ import { GuisoService } from './service/guiso.service';
       { name: 'BaseProduct', schema: BaseProdSchema },
       { name: 'Guiso', schema: GuisoSchema },
     ]),
+    UserModule,
   ],
   controllers: [CatalogController, GuisoController],
   providers: [
