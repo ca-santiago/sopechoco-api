@@ -17,7 +17,7 @@ export class AuthService {
   }
 
   generateCredentials(payload: IUserPublicDTO): Record<string, any> {
-    const accessToken = this.jwtService.sign(payload, { expiresIn: '60s' });
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '1w' });
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '1w' });
     return { accessToken, refreshToken };
   }

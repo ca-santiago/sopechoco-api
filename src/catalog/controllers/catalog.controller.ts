@@ -79,4 +79,16 @@ export class GuisoController {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
     }
   }
+
+  @Get(':id')
+  async getById(@Param('id') id, @Res() res) {
+    try {
+      const result = await this.guisoService.getById(id);
+      if (result) return res.status(HttpStatus.OK).json(result).end();
+      return res.status(HttpStatus.NOT_FOUND).end();
+    } catch (err) {
+      console.error(err);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
+    }
+  }
 }
