@@ -1,7 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CatalogModule } from 'src/catalog/catalog.module';
+import { UserModule } from 'src/users/user.module';
+import { AdminSocketGateway } from './controllers/admin.gateway';
 import { OrderController } from './controllers/order.controller';
+import { OrderSocketGateway } from './controllers/order.gateway';
+import { WsGuard } from './guard/ws.guard';
 import { OrderMapper } from './mapper/order.mapper';
 import { OrderItemMapper } from './mapper/orderItem.mapper';
 import { OrderRepo } from './repo/order.repo';
@@ -17,6 +21,7 @@ import { OrderService } from './services/order.service';
       { name: 'OrderItem', schema: OrderItemSchema },
     ]),
     CatalogModule,
+    UserModule,
   ],
   controllers: [OrderController],
   providers: [
@@ -28,6 +33,9 @@ import { OrderService } from './services/order.service';
     // MAPPERS
     OrderItemMapper,
     OrderMapper,
+    OrderSocketGateway,
+    AdminSocketGateway,
+    WsGuard,
   ],
   exports: [],
 })

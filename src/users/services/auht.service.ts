@@ -21,4 +21,14 @@ export class AuthService {
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '1w' });
     return { accessToken, refreshToken };
   }
+
+  decodeToken(token: string): IUserPublicDTO | null {
+    try {
+      const payload = this.jwtService.decode(token);
+      if (payload) return payload as IUserPublicDTO;
+      return null;
+    } catch (err) {
+      return null;
+    }
+  }
 }

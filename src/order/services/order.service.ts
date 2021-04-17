@@ -9,6 +9,8 @@ import * as moment from 'moment';
 import { BaseProduct } from 'src/catalog/domain/BaseProd';
 import { OrderRepo } from '../repo/order.repo';
 import { IOrderPublicDTO } from '../interfaces/order.dto';
+import { OrderSocketGateway } from '../controllers/order.gateway';
+import { OrderMapper } from '../mapper/order.mapper';
 
 @Injectable()
 export class OrderService {
@@ -16,6 +18,8 @@ export class OrderService {
     private guisoRepo: GuisoRepo,
     private productRepo: BaseProdRepo,
     private orderRepo: OrderRepo,
+    private orderMapper: OrderMapper,
+    private orderSocket: OrderSocketGateway,
   ) {}
   // private orderRepo: OrderRepo,
 
@@ -95,7 +99,10 @@ export class OrderService {
       items,
       dto.groups,
     );
-    this.orderRepo.save(orderInstance);
+    await this.orderRepo.save(orderInstance);
+    this.orderSocket.newOrderCreated(
+      this.orderMapper.toPublicDTO(orderInstance),
+    );
     return;
   }
 
