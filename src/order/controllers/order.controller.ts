@@ -6,8 +6,11 @@ import {
   Param,
   Post,
   Query,
+  Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { CreateOrderDTO } from '../services/order.dto';
 import { OrderService } from '../services/order.service';
@@ -16,16 +19,23 @@ import { OrderService } from '../services/order.service';
 export class OrderController {
   constructor(private orderService: OrderService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
-  async createOrder(@Body() dto: CreateOrderDTO, @Res() res: Response) {
+  async createOrder(
+    @Body() dto: CreateOrderDTO,
+    @Res() res: Response,
+    @Req() req,
+  ) {
     try {
-      await this.orderService.createOrder(dto);
+      const { user } = req;
+      await this.orderService.createOrder(dto, user.id);
       res.status(201).end();
     } catch (err) {
       throw err;
     }
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async getById(@Param('id') id: string, @Res() res: Response) {
     console.log('getting by id');
@@ -38,10 +48,12 @@ export class OrderController {
     }
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get()
-  async getAll(@Query() q, @Res() res: Response) {
+  async getAll(@Query() q, @Res() res: Response, @Req() req) {
     try {
-      const results = await this.orderService.getAllOrders();
+      const { user } = req;
+      const results = await this.orderService.getAllOrdersByOwner(user.id);
       if (!results) return res.status(HttpStatus.NOT_FOUND).end();
       return res.status(HttpStatus.OK).json({ results }).end();
     } catch (err) {

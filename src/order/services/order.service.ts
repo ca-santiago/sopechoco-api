@@ -77,7 +77,7 @@ export class OrderService {
     return true;
   }
 
-  async createOrder(dto: CreateOrderDTO) {
+  async createOrder(dto: CreateOrderDTO, userId: string) {
     let items: IOrderItem[];
     try {
       items = await this.verifyProducts(dto.items);
@@ -88,6 +88,8 @@ export class OrderService {
 
     const orderInstance = new Order(
       v4(),
+      userId,
+      moment().format(),
       moment().format(),
       OrderStatus.PLACED,
       items,
@@ -101,8 +103,13 @@ export class OrderService {
     return await this.orderRepo.findByIdToDTO(id);
   }
 
-  // Just for admins in the future.
-  async getAllOrders(page = 0): Promise<IOrderPublicDTO[]> {
-    return await this.orderRepo.findToDTO(page > 1 ? page - 1 : 0);
+  async getAllOrdersByOwner(
+    ownerId: string,
+    page = 0,
+  ): Promise<IOrderPublicDTO[]> {
+    return await this.orderRepo.findAllFromOwnerToDTO(
+      ownerId,
+      page > 1 ? page - 1 : 0,
+    );
   }
 }

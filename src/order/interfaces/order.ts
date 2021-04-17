@@ -1,8 +1,8 @@
 export interface IOrder {
   id: string;
-  // owner: string;
-  // ownerName: string;
+  owner: string;
   createdAt: string;
+  lastUpdate: string;
   status: OrderStatus;
   items: IOrderItem[];
   groups: string[];

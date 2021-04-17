@@ -9,7 +9,9 @@ export class OrderMapper {
   toDomain(raw: IOrderRepo): Order {
     return new Order(
       raw._id,
+      raw.owner,
       raw.createdAt,
+      raw.lastUpdate,
       (raw.status as unknown) as OrderStatus,
       [],
       raw.groups,
@@ -19,7 +21,9 @@ export class OrderMapper {
   toRepo(o: Order): IOrderRepo {
     const output: IOrderRepo = {
       _id: o.id,
+      owner: o.owner,
       createdAt: o.createdAt,
+      lastUpdate: o.lastUpdate,
       groups: o.groups,
       items: o.items.map((item) => item.id),
       status: OrderStatus[(o.status as unknown) as string],
@@ -30,10 +34,12 @@ export class OrderMapper {
   toPublicDTO(o: Order): IOrderPublicDTO {
     const output: IOrderPublicDTO = {
       id: o.id,
+      owner: o.owner,
       status: o.status.toString(),
       items: [],
       groups: o.groups,
       createdAt: o.createdAt,
+      lastUpdate: o.lastUpdate,
     };
     return output;
   }
@@ -41,7 +47,9 @@ export class OrderMapper {
   fromRepoToDTO(raw: IOrderRepo): IOrderPublicDTO {
     const mapped: IOrderPublicDTO = {
       id: raw._id,
+      owner: raw.owner,
       createdAt: raw.createdAt,
+      lastUpdate: raw.lastUpdate,
       groups: raw.groups,
       items: raw.items,
       status: raw.status,

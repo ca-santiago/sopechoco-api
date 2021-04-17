@@ -46,6 +46,17 @@ export class OrderRepo {
     return null;
   }
 
+  async findAllFromOwnerToDTO(ownerId: string, offset: number) {
+    const results = await this.orderModel
+      .find({ owner: ownerId })
+      .skip(10 * offset)
+      .limit(10)
+      .sort('createdAt')
+      .exec();
+    const mapped = results.map((item) => this.orderMapper.fromRepoToDTO(item));
+    return mapped;
+  }
+
   async findToDTO(offset: number): Promise<IOrderPublicDTO[]> {
     const results = await this.orderModel
       .find()
